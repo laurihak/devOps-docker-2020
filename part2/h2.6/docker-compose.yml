@@ -1,0 +1,32 @@
+version: '3.5'  
+
+services:
+    db:
+      image: postgres
+      restart: unless-stopped
+      network_mode: host
+      environment:
+        POSTGRES_USER: db
+        POSTGRES_PASSWORD: example
+      ports:
+        - 5432:5432
+    redis:
+      build: ./redis
+      network_mode: host
+
+    docker-backend: 
+      build: ./backend
+      volumes:
+        - ./backend/logs.txt:/app/backend-example-docker/logs.txt
+      ports: 
+        - 8000:8000
+      network_mode: host
+      environment:
+        - REDIS=localhost
+        - DB_USERNAME=db
+        - DB_PASSWORD=example
+    docker-frontend: 
+      build: ./frontend
+      ports: 
+        - 5000:5000
+      network_mode: host

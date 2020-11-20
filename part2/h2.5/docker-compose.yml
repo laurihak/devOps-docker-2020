@@ -1,0 +1,23 @@
+version: '3.5'  
+
+services:
+    redis:
+      build: ./redis
+      network_mode: host
+
+    docker-backend: 
+      build: ./backend
+      volumes:
+        - ./backend/logs.txt:/app/backend-example-docker/logs.txt
+      ports: 
+        - 8000:8000
+      network_mode: host
+      environment:
+        - REDIS=localhost
+
+    docker-frontend: 
+      build: ./frontend
+      ports: 
+        - 5000:5000
+      network_mode: host
+      

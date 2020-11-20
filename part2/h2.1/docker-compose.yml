@@ -1,0 +1,9 @@
+version: '3.5' 
+
+services: 
+
+    docker-volume-ubuntu: 
+      image: devopsdockeruh/first_volume_exercise
+      volumes: 
+        - ./logs.txt:/usr/app/logs.txt
+      container_name: docker-volume
