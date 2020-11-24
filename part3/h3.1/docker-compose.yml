@@ -1,0 +1,46 @@
+version: '3.5'  
+
+services:
+    nginx:
+      image: nginx
+      ports: 
+        - 80:80
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+      network_mode: host
+
+    db:
+      image: postgres
+      restart: unless-stopped
+      network_mode: host
+      environment:
+        POSTGRES_USER: db
+        POSTGRES_PASSWORD: example
+      ports:
+        - 5432:5432
+
+    redis:
+      build: ./redis
+      network_mode: host
+
+    docker-backend: 
+      build: ./backend
+      volumes:
+        - ./backend/logs.txt:/app/backend-example-docker/logs.txt
+      network_mode: host
+      environment:
+        - REDIS=localhost
+        - DB_USERNAME=db
+        - DB_PASSWORD=example
+        - FRONT_URL=http://localhost:5000
+      ports: 
+        - 80
+
+    docker-frontend: 
+      build: ./frontend
+      network_mode: host
+      environment:
+        - API_URL=/api
+      ports:
+        - 80
+
